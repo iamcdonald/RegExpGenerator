@@ -70,7 +70,7 @@ tape('UnicodeRange', t => {
 
   t.test('subtract', t => {
 
-    t.test('when ranges is before and does not overlap', t => {
+    t.test('when incoming range is before and does not overlap', t => {
       t.plan(1);
       let ur = new UnicodeRange(40, 60),
         result = ur.subtract(new UnicodeRange(20, 30)),
@@ -78,7 +78,7 @@ tape('UnicodeRange', t => {
       t.deepEqual(result, expected);
     });
 
-    t.test('when ranges is after and does not overlap', t => {
+    t.test('when incoming range is after and does not overlap', t => {
       t.plan(1);
       let ur = new UnicodeRange(40, 60),
         result = ur.subtract(new UnicodeRange(63, 90)),
@@ -126,6 +126,72 @@ tape('UnicodeRange', t => {
         let ur = new UnicodeRange(40, 60),
           result = ur.subtract(new UnicodeRange(47, 60)),
           expected = [new UnicodeRange(40, 46)];
+        t.deepEqual(result, expected);
+      });
+    });
+
+  });
+
+  t.test('merge', t => {
+
+    t.test('when incoming range is before and does not overlap', t => {
+      t.plan(1);
+      let ur = new UnicodeRange(40, 60),
+        result = ur.merge(new UnicodeRange(20, 30)),
+        expected = [new UnicodeRange(40, 60), new UnicodeRange(20, 30)];
+      t.deepEqual(result, expected);
+    });
+
+    t.test('when incoming range is after and does not overlap', t => {
+      t.plan(1);
+      let ur = new UnicodeRange(40, 60),
+        result = ur.merge(new UnicodeRange(63, 90)),
+        expected = [new UnicodeRange(40, 60), new UnicodeRange(63, 90)];
+      t.deepEqual(result, expected);
+    });
+
+    t.test('when incoming range start point is before or equal to current range start', t => {
+
+      t.test('and incoming range end point is equal to current range start point - 1', t => {
+        t.plan(1);
+        let ur = new UnicodeRange(40, 60),
+          result = ur.merge(new UnicodeRange(20, 39)),
+          expected = [new UnicodeRange(20, 60)];
+        t.deepEqual(result, expected);
+      });
+
+      t.test('and incoming range end point is larger than current range start point but smaller than current range end point', t => {
+        t.plan(1);
+        let ur = new UnicodeRange(40, 60),
+          result = ur.merge(new UnicodeRange(20, 46)),
+          expected = [new UnicodeRange(20, 60)];
+        t.deepEqual(result, expected);
+      });
+
+      t.test('and incoming range end point is larger then current range end point', t => {
+        t.plan(1);
+        let ur = new UnicodeRange(40, 60),
+          result = ur.merge(new UnicodeRange(20, 70)),
+          expected = [new UnicodeRange(20, 70)]
+        t.deepEqual(result, expected);
+      });
+    });
+
+    t.test('when incoming range start point is after current range start point', t => {
+
+      t.test('and incoming range end point is smaller than current range end point', t => {
+        t.plan(1);
+        let ur = new UnicodeRange(40, 60),
+          result = ur.merge(new UnicodeRange(45, 50)),
+          expected = [new UnicodeRange(40, 60)];
+        t.deepEqual(result, expected);
+      });
+
+      t.test('and incoming range end point is larger than current range end point', t => {
+        t.plan(1);
+        let ur = new UnicodeRange(40, 60),
+          result = ur.merge(new UnicodeRange(47, 70)),
+          expected = [new UnicodeRange(40, 70)];
         t.deepEqual(result, expected);
       });
     });
