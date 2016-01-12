@@ -36,6 +36,11 @@ tape('UnicodeRangeSet', t => {
       t.equal(urs.totalChars, 11);
     });
 
+    t.test('handles being passed a single range', t => {
+      t.plan(1);
+      t.doesNotThrow(() => new UnicodeRangeSet(new UnicodeRange(20, 30)), Error);
+    });
+
   });
 
   t.test('merge', t => {
