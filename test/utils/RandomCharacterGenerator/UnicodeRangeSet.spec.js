@@ -199,10 +199,10 @@ tape('UnicodeRangeSet', t => {
 
     t.test('complex exmaple', t => {
       t.plan(1);
-      let ranges = [new UnicodeRange(12, 0x0020), new UnicodeRange(50, 100), new UnicodeRange(120, 140)],
+      let ranges = [new UnicodeRange(12, 32), new UnicodeRange(50, 100), new UnicodeRange(120, 140)],
         urs = new UnicodeRangeSet(ranges),
         expected = new UnicodeRangeSet([new UnicodeRange(12, 32), new UnicodeRange(50, 89), new UnicodeRange(121, 123), new UnicodeRange(139, 140)]);
-      urs = urs.subtract([new UnicodeRange(124, 138), new UnicodeRange(0x0021, 49), new UnicodeRange(110, 120), new UnicodeRange(90, 119)])
+      urs = urs.subtract([new UnicodeRange(124, 138), new UnicodeRange(33, 49), new UnicodeRange(110, 120), new UnicodeRange(90, 119)])
       t.deepEqual(urs, expected);
     });
   });

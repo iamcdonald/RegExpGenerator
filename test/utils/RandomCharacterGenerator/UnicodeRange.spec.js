@@ -1,7 +1,7 @@
 import UnicodeRange from '../../../lib/utils/RandomCharacterGenerator/UnicodeRange';
 import tape from 'tape';
 
-tape.only('UnicodeRange', t => {
+tape('UnicodeRange', t => {
 
   t.test('constructor', t => {
 
@@ -17,11 +17,7 @@ tape.only('UnicodeRange', t => {
       let ur = new UnicodeRange(12, 0x020);
       t.deepEqual(ur, {
         start: 12,
-        end: 32,
-        weighting: {
-          start: 0,
-          end: 0
-        }
+        end: 32
       });
     });
 
@@ -30,11 +26,7 @@ tape.only('UnicodeRange', t => {
       let ur = new UnicodeRange('A', 'G');
       t.deepEqual(ur, {
         start: 'A'.codePointAt(0),
-        end: 'G'.codePointAt(0),
-        weighting: {
-          start: 0,
-          end: 0
-        }
+        end: 'G'.codePointAt(0)
       });
     });
 
@@ -77,6 +69,22 @@ tape.only('UnicodeRange', t => {
   });
 
   t.test('subtract', t => {
+
+    t.test('when ranges is before and does not overlap', t => {
+      t.plan(1);
+      let ur = new UnicodeRange(40, 60),
+        result = ur.subtract(new UnicodeRange(20, 30)),
+        expected = [new UnicodeRange(40, 60)];
+      t.deepEqual(result, expected);
+    });
+
+    t.test('when ranges is after and does not overlap', t => {
+      t.plan(1);
+      let ur = new UnicodeRange(40, 60),
+        result = ur.subtract(new UnicodeRange(63, 90)),
+        expected = [new UnicodeRange(40, 60)];
+      t.deepEqual(result, expected);
+    });
 
     t.test('when incoming range start point is before or equal to current range start point', t => {
 
