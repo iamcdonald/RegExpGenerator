@@ -131,18 +131,18 @@ tape('RandomCharacterGenerator', t => {
     });
   });
 
-  t.test('getCharacterFromRange', t => {
+  t.test('getCharacterFromRanges', t => {
     t.test('returns character within given ranges', t => {
       t.plan(2);
       let cr = new RandomCharacterGenerator(),
         char,
         regex;
       cr.setAvailableRanges([new UnicodeRange(0x0021, 0x0039), new UnicodeRange(0x0041, 0x005A)]);
-      char = cr.getCharacterFromRange([new UnicodeRange(' ', '3'), new UnicodeRange('E', 'W')]);
+      char = cr.getCharacterFromRanges([new UnicodeRange(' ', '3'), new UnicodeRange('E', 'W')]);
       regex = /[ -3E-W]/;
       t.ok(regex.test(char), `${char} is in the range ${regex}`);
       regex = /[ -Z]/;
-      char = cr.getCharacterFromRange([new UnicodeRange(' ', 'X')]);
+      char = cr.getCharacterFromRanges(new UnicodeRange(' ', 'X'));
       t.ok(regex.test(char), `${char} is in the range ${regex}`);
     })
   });

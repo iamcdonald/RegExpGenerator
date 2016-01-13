@@ -11,7 +11,7 @@ const sanitizeRegExpForTest = regex => {
   return new RegExp(regex);
 }
 
-tape.only('RegExpGenerator', t => {
+tape('RegExpGenerator', t => {
 
   t.test('setup', t => {
 
