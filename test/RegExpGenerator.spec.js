@@ -1,14 +1,11 @@
 import RegExpGenerator from '../lib/RegExpGenerator';
 import tape from 'tape';
 
-const sanitizeRegExpForTest = regex => {
-  if (regex[0] !== '^') {
-    regex = `^${regex}`;
-  }
-  if (regex[regex.length - 1] !== '$') {
-    regex = `${regex}$`;
-  }
-  return new RegExp(regex);
+const testHandlesRegExp = (t, regexp) => {
+  const regex = new RegExp(regexp),
+    generator = new RegExpGenerator(regex),
+    result = generator.gen();
+  t.ok(regex.test(result), `${result} matches ${regex}`);
 }
 
 tape('RegExpGenerator', t => {
@@ -26,125 +23,80 @@ tape('RegExpGenerator', t => {
 
     t.test('handles literals', t => {
       t.plan(1);
-      const regex = new RegExp('afg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'afg');
     });
 
     t.test('handles forced literals \\\\', t => {
       t.plan(1);
-      const regex = new RegExp('af\\?g'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'af\\?g');
     });
   });
 
   t.test('handles start and end tokens', t => {
     t.plan(1);
-    const regex = new RegExp('^afgafg$'),
-      generator = new RegExpGenerator(regex),
-      result = generator.gen();
-    t.ok(regex.test(result), `${result} matches ${regex}`);
+    testHandlesRegExp(t, '^afgafg$');
   });
 
   t.test('quantifiers', t => {
 
     t.test('handles + quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('afg+'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'afg+');
     });
 
     t.test('handles +? quantifier (lazy)', t => {
       t.plan(1);
-      const regex = new RegExp('afg+?'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'afg+?');
     });
 
     t.test('handles * quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('af*g'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'af*g');
     });
 
     t.test('handles *? quantifier (lazy)', t => {
       t.plan(1);
-      const regex = new RegExp('af*?g'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'af*?g');
     });
 
     t.test('handles ? quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('a?fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a?fg');
     });
 
     t.test('handles ?? quantifier (lazy)', t => {
       t.plan(1);
-      const regex = new RegExp('a??fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a??fg');
     });
 
     t.test('handles {x} quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('a{3}fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a{3}fg');
     });
 
     t.test('handles {x}? quantifier (lazy)', t => {
       t.plan(1);
-      const regex = new RegExp('a{3}?fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a{3}?fg');
     });
 
     t.test('handles {x,} quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('a{2,}fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a{2,}fg');
     });
 
     t.test('handles {x,}? quantifier (lazy)', t => {
       t.plan(1);
-      const regex = new RegExp('a{4,}?fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a{4,}?fg');
     });
 
     t.test('handles {x,y} quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('a{2,12}fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a{2,12}fg');
     });
 
     t.test('handles {x,y}? quantifier (lazy)', t => {
       t.plan(1);
-      const regex = new RegExp('a{4,12}?fg'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'a{4,12}?fg');
     });
   });
 
@@ -152,26 +104,17 @@ tape('RegExpGenerator', t => {
 
     t.test('handles character class', t => {
       t.plan(1);
-      const regex = new RegExp('[af09.okg]'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, '[af09.okg]');
     });
 
     t.test('handles character class with quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('[af24t?\\]Tj0]+'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, '[af24t?\\]Tj0]+');
     });
 
     t.test('handles negated character class with quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('[^afj09okg]+'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, '[^afj09okg]+');
     });
   });
 
@@ -179,34 +122,22 @@ tape('RegExpGenerator', t => {
 
     t.test('handles group class',  t => {
       t.plan(1);
-      const regex = new RegExp('(a+sdf?)'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, '(a+sdf?)');
     });
 
     t.test('handles group class with quantifier',  t => {
       t.plan(1);
-      const regex = new RegExp('(a+sdf?){2,3}'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, '(a+sdf?){2,3}');
     });
 
     t.test('handles group class - non-capture', t => {
       t.plan(1);
-      const regex = new RegExp('w(?:ai?ters?)'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'w(?:ai?ters?)');
     });
 
     t.test('handles group class - non-capture with quantifier', t => {
       t.plan(1);
-      const regex = new RegExp('w(?:ai?ters?){3,}'),
-        generator = new RegExpGenerator(regex),
-        result = generator.gen();
-      t.ok(regex.test(result), `${result} matches ${regex}`);
+      testHandlesRegExp(t, 'w(?:ai?ters?){3,}');
     });
 
     t.test('throws no support error for positive lookahead groups', t => {
