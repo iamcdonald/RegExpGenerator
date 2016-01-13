@@ -11,7 +11,7 @@ const sanitizeRegExpForTest = regex => {
   return new RegExp(regex);
 }
 
-tape('RegExpGenerator', t => {
+tape.only('RegExpGenerator', t => {
 
   t.test('setup', t => {
 
@@ -173,6 +173,52 @@ tape('RegExpGenerator', t => {
         result = generator.gen();
       t.ok(regex.test(result), `${result} matches ${regex}`);
     });
+  });
+
+  t.test('groups', t => {
+
+    t.test('handles group class',  t => {
+      t.plan(1);
+      const regex = new RegExp('(a+sdf?)'),
+        generator = new RegExpGenerator(regex),
+        result = generator.gen();
+      t.ok(regex.test(result), `${result} matches ${regex}`);
+    });
+
+    t.test('handles group class with quantifier',  t => {
+      t.plan(1);
+      const regex = new RegExp('(a+sdf?){2,3}'),
+        generator = new RegExpGenerator(regex),
+        result = generator.gen();
+      t.ok(regex.test(result), `${result} matches ${regex}`);
+    });
+
+    t.test('handles group class - non-capture', t => {
+      t.plan(1);
+      const regex = new RegExp('w(?:ai?ters?)'),
+        generator = new RegExpGenerator(regex),
+        result = generator.gen();
+      t.ok(regex.test(result), `${result} matches ${regex}`);
+    });
+
+    t.test('handles group class - non-capture with quantifier', t => {
+      t.plan(1);
+      const regex = new RegExp('w(?:ai?ters?){3,}'),
+        generator = new RegExpGenerator(regex),
+        result = generator.gen();
+      t.ok(regex.test(result), `${result} matches ${regex}`);
+    });
+
+    t.test('throws no support error for positive lookahead groups', t => {
+      t.plan(1);
+      t.throws(() => new RegExpGenerator(/w(?=ater)s/), Error);
+    });
+
+    t.test('throws no support error for negative lookahead groups', t => {
+      t.plan(1);
+      t.throws(() => new RegExpGenerator(/w(?!ater)s/), Error);
+    });
+
   });
 
 });
