@@ -36,7 +36,7 @@ tape('random', t => {
   });
 
   t.test('int gives a rounded int within two numbers inclusive', t => {
-    t.plan(7);
+    t.plan(8);
     stubs.random_incl.returns(0);
     t.equals(random.int(2.4, 10), 2);
     t.equals(random.int(8, 17), 8);
@@ -48,6 +48,8 @@ tape('random', t => {
     t.equals(random.int(2, 16), 8);
     stubs.random_incl.returns(0.67);
     t.equals(random.int(1, 1023), 686);
+    stubs.random_incl.returns(0.501);
+    t.equals(random.int(1, 2), 2);
   });
 
 })

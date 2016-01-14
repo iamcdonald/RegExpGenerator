@@ -13,7 +13,7 @@ tape('RegExpGenerator', t => {
   t.test('setup', t => {
 
     t.test('throws an error if given bad regex', t => {
-      t.plan(2)
+      t.plan(2);
       t.throws(() => new RegExpGenerator('(afg\\'), SyntaxError);
       t.throws(() => new RegExpGenerator('a**f-w\\'), SyntaxError);
     });
@@ -116,26 +116,54 @@ tape('RegExpGenerator', t => {
       t.plan(1);
       testHandlesRegExp(t, '[^afj09okg]+');
     });
+
+    t.test('range', t => {
+
+      t.test('handles range', t => {
+        t.plan(1);
+        testHandlesRegExp(t, '\w[d-m]');
+      });
+
+      t.test('handles range with quantifier', t => {
+        t.plan(1);
+        testHandlesRegExp(t, '\w[d-m]+');
+      });
+
+      t.test('handles negated range', t => {
+        t.plan(1);
+        testHandlesRegExp(t, '\w[^d-m]');
+      });
+      t.test('handles negated range', t => {
+        t.plan(1);
+        testHandlesRegExp(t, '\w[^d-m]{3,8}-100!');
+      });
+    });
+
+    t.test('complex', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '>[af\\]p-s]<>[^qwertyM-Z]{2}<')
+    });
+
   });
 
   t.test('groups', t => {
 
-    t.test('handles group class',  t => {
+    t.test('handles group',  t => {
       t.plan(1);
       testHandlesRegExp(t, '(a+sdf?)');
     });
 
-    t.test('handles group class with quantifier',  t => {
+    t.test('handles group with quantifier',  t => {
       t.plan(1);
       testHandlesRegExp(t, '(a+sdf?){2,3}');
     });
 
-    t.test('handles group class - non-capture', t => {
+    t.test('handles non-capture group', t => {
       t.plan(1);
       testHandlesRegExp(t, 'w(?:ai?ters?)');
     });
 
-    t.test('handles group class - non-capture with quantifier', t => {
+    t.test('handles non-capture group with quantifier', t => {
       t.plan(1);
       testHandlesRegExp(t, 'w(?:ai?ters?){3,}');
     });
@@ -151,5 +179,19 @@ tape('RegExpGenerator', t => {
     });
 
   });
+
+  t.test('alternatives', t => {
+    t.test('handles alternative', t => {
+      t.plan(1);
+      testHandlesRegExp(t, 'as|sa');
+    });
+
+    t.test('handles alternatives', t => {
+      t.plan(1);
+      testHandlesRegExp(t, 'as|(sa){2,3}|[0-9]{5}');
+    });
+  });
+
+  
 
 });
