@@ -8,7 +8,7 @@ const testHandlesRegExp = (t, regexp) => {
   t.ok(regex.test(result), `${result} matches ${regex}`);
 }
 
-tape('RegExpGenerator', t => {
+tape.only('RegExpGenerator', t => {
 
   t.test('setup', t => {
 
@@ -192,6 +192,47 @@ tape('RegExpGenerator', t => {
     });
   });
 
-  
+  t.test('meta', t => {
+
+    t.test('handles . - any character', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '.{2}');
+    });
+
+    t.test('handles \\s - white-space', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\s+');
+    });
+
+    t.test('handles \\S - non-white-space', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\S+');
+    });
+
+    t.test('handles \\w - word char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\w+');
+    });
+
+    t.test('handles \\W - non word char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\W+');
+    });
+
+    t.test('handles \\d - digit char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\d+');
+    });
+
+    t.test('handles \\D - non digit char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\D+');
+    });
+
+    t.test('handles \\D - non digit char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\D+');
+    });
+  });
 
 });

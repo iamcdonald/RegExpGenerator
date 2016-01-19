@@ -158,6 +158,20 @@ tape('UnicodeRangeSet', t => {
       t.deepEqual(urs, expected);
     });
 
+    t.test('accepts UnicodeRangeSet as arg', t => {
+      t.plan(1);
+      let ranges = [new UnicodeRange(12, 0x0020), new UnicodeRange(50, 100), new UnicodeRange(120, 140)],
+        urs = new UnicodeRangeSet(ranges),
+        expected = new UnicodeRangeSet([new UnicodeRange(12, 100), new UnicodeRange(110, 116), new UnicodeRange(119, 140)]);
+      urs = urs.merge(new UnicodeRangeSet([
+          new UnicodeRange(124, 138),
+          new UnicodeRange(0x0021, 49),
+          new UnicodeRange(110, 116),
+          new UnicodeRange(119, 119)
+        ]));
+      t.deepEqual(urs, expected);
+    });
+
   });
 
   t.test('subtract', t => {
@@ -202,12 +216,26 @@ tape('UnicodeRangeSet', t => {
       t.deepEqual(urs, expected);
     });
 
-    t.test('complex exmaple', t => {
+    t.test('complex example', t => {
       t.plan(1);
       let ranges = [new UnicodeRange(12, 32), new UnicodeRange(50, 100), new UnicodeRange(120, 140)],
         urs = new UnicodeRangeSet(ranges),
         expected = new UnicodeRangeSet([new UnicodeRange(12, 32), new UnicodeRange(50, 89), new UnicodeRange(121, 123), new UnicodeRange(139, 140)]);
       urs = urs.subtract([new UnicodeRange(124, 138), new UnicodeRange(33, 49), new UnicodeRange(110, 120), new UnicodeRange(90, 119)])
+      t.deepEqual(urs, expected);
+    });
+
+    t.test('accepts UnicodeRangeSet as arg', t => {
+      t.plan(1);
+      let ranges = [new UnicodeRange(12, 32), new UnicodeRange(50, 100), new UnicodeRange(120, 140)],
+        urs = new UnicodeRangeSet(ranges),
+        expected = new UnicodeRangeSet([new UnicodeRange(12, 32), new UnicodeRange(50, 89), new UnicodeRange(121, 123), new UnicodeRange(139, 140)]);
+      urs = urs.subtract(new UnicodeRangeSet([
+          new UnicodeRange(124, 138),
+          new UnicodeRange(33, 49),
+          new UnicodeRange(110, 120),
+          new UnicodeRange(90, 119)
+        ]));
       t.deepEqual(urs, expected);
     });
   });
