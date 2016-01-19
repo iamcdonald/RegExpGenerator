@@ -233,6 +233,38 @@ tape.only('RegExpGenerator', t => {
       t.plan(1);
       testHandlesRegExp(t, '\\D+');
     });
+
+    t.test('handles \\t - tab char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\t+');
+    });
+
+    t.test('handles \\r - return char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\r+');
+    });
+
+    t.test('handles \\n - new line char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\n+');
+    });
+
+    t.test('handles \\u - hex char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\u0069+');
+    });
+
+    t.test('handles \\x - hex char', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\x69+');
+    });
+
+    t.test('handles \\ddd - octal char', t => {
+      t.plan(3);
+      testHandlesRegExp(t, '\\6+');
+      testHandlesRegExp(t, '\\45+');
+      testHandlesRegExp(t, '\\245+');
+    });
   });
 
 });
