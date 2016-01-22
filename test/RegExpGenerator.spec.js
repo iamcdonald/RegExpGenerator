@@ -8,7 +8,7 @@ const testHandlesRegExp = (t, regexp) => {
   t.ok(regex.test(result), `${result} matches ${regex}`);
 }
 
-tape.only('RegExpGenerator', t => {
+tape('RegExpGenerator', t => {
 
   t.test('setup', t => {
 
@@ -32,9 +32,27 @@ tape.only('RegExpGenerator', t => {
     });
   });
 
-  t.test('handles start and end tokens', t => {
-    t.plan(1);
-    testHandlesRegExp(t, '^afgafg$');
+  t.test('anchors', t => {
+
+    t.test('throws no support error for start anchor - ^', t => {
+      t.plan(1);
+      t.throws(() => new RegExpGenerator(/^asd/), /NotSupportedError/);
+    });
+
+    t.test('throws no support error for end anchor - $', t => {
+      t.plan(1);
+      t.throws(() => new RegExpGenerator(/afgafg$/), /NotSupportedError/);
+    });
+
+    t.test('throws no support error for word boundary anchor - \\b', t => {
+      t.plan(1);
+      t.throws(() => new RegExpGenerator(/afg\bafg/), /NotSupportedError/);
+    });
+
+    t.test('throws no support error for non word boundary anchor - \\B', t => {
+      t.plan(1);
+      t.throws(() => new RegExpGenerator(/afg\Bafg/), /NotSupportedError/);
+    });
   });
 
   t.test('quantifiers', t => {
@@ -170,12 +188,12 @@ tape.only('RegExpGenerator', t => {
 
     t.test('throws no support error for positive lookahead groups', t => {
       t.plan(1);
-      t.throws(() => new RegExpGenerator(/w(?=ater)s/), Error);
+      t.throws(() => new RegExpGenerator(/w(?=ater)s/), /NotSupportedError/);
     });
 
     t.test('throws no support error for negative lookahead groups', t => {
       t.plan(1);
-      t.throws(() => new RegExpGenerator(/w(?!ater)s/), Error);
+      t.throws(() => new RegExpGenerator(/w(?!ater)s/), /NotSupportedError/);
     });
 
   });
