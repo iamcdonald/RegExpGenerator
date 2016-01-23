@@ -198,6 +198,15 @@ tape('RegExpGenerator', t => {
 
   });
 
+  t.test('group reference', t => {
+
+    t.test('handles group references', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '(a?gha?st(!){2,3}--)\\1{2}');
+    });
+
+  });
+
   t.test('alternatives', t => {
     t.test('handles alternative', t => {
       t.plan(1);
