@@ -226,12 +226,12 @@ tape('RegExpGenerator', t => {
       testHandlesRegExp(t, '.{2}');
     });
 
-    t.test('handles \\s - white-space', t => {
+    t.test('handles \\s - white space', t => {
       t.plan(1);
       testHandlesRegExp(t, '\\s+');
     });
 
-    t.test('handles \\S - non-white-space', t => {
+    t.test('handles \\S - non white space', t => {
       t.plan(1);
       testHandlesRegExp(t, '\\S+');
     });
@@ -291,6 +291,11 @@ tape('RegExpGenerator', t => {
       testHandlesRegExp(t, '\\6+');
       testHandlesRegExp(t, '\\45+');
       testHandlesRegExp(t, '\\245+');
+    });
+
+    t.test('handles \\v - vertical white space', t => {
+      t.plan(1);
+      testHandlesRegExp(t, '\\v');
     });
   });
 
