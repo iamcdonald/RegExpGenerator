@@ -1,7 +1,7 @@
-import unicodeRanges from '../../../lib/utils/RandomCharacterGenerator/unicodeRanges';
-import UnicodeRange from '../../../lib/utils/RandomCharacterGenerator/UnicodeRange';
-import UnicodeRangeSet from '../../../lib/utils/RandomCharacterGenerator/UnicodeRangeSet';
-import RandomCharacterGenerator, { setDefaultAvailableRanges } from '../../../lib/utils/RandomCharacterGenerator/RandomCharacterGenerator';
+import unicodeRanges from '../../lib/utils/unicodeRanges';
+import UnicodeRange from '../../lib/utils/UnicodeRange';
+import UnicodeRangeSet from '../../lib/utils/UnicodeRangeSet';
+import RandomCharacterGenerator, { setDefaultAvailableRanges } from '../../lib/utils/RandomCharacterGenerator';
 import tape from 'tape';
 
 tape('setDefaultAvailableRanges', t => {

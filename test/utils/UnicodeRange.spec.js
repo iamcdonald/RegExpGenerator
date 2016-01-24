@@ -1,4 +1,4 @@
-import UnicodeRange from '../../../lib/utils/RandomCharacterGenerator/UnicodeRange';
+import UnicodeRange from '../../lib/utils/UnicodeRange';
 import tape from 'tape';
 
 tape('UnicodeRange', t => {

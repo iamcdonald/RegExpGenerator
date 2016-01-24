@@ -1,13 +1,13 @@
-import UnicodeRange from '../../../lib/utils/RandomCharacterGenerator/UnicodeRange';
+import UnicodeRange from '../../lib/utils/UnicodeRange';
 import tape from 'tape';
 import proxyquire from 'proxyquire';
 
 const stubs = {
-    '../random': {
+    './random': {
         int: () => 0
       }
   };
-const { default: UnicodeRangeSet } = proxyquire('../../../lib/utils/RandomCharacterGenerator/UnicodeRangeSet', stubs);
+const { default: UnicodeRangeSet } = proxyquire('../../lib/utils/UnicodeRangeSet', stubs);
 
 
 tape('UnicodeRangeSet', t => {
@@ -243,7 +243,7 @@ tape('UnicodeRangeSet', t => {
   t.test('getRandomCharacter', t => {
     t.test('returns random character from range', t => {
       t.plan(1);
-      stubs['../random'].int = () => 3;
+      stubs['./random'].int = () => 3;
       let urs = new UnicodeRangeSet([new UnicodeRange('A', 'F')]),
         regex = /[C]/,
         char = urs.getRandomCharacter();
@@ -252,13 +252,13 @@ tape('UnicodeRangeSet', t => {
 
     t.test('weights random range choice according to amount of chars held in each range', t => {
       t.plan(2);
-      stubs['../random'].int = () => 5;
+      stubs['./random'].int = () => 5;
       let urs = new UnicodeRangeSet([new UnicodeRange('A', 'C'), new UnicodeRange('G', 'M')]),
         regex = /[H]/,
         char = urs.getRandomCharacter();
       t.ok(regex.test(char), `${char} is in regex ${regex}`);
 
-      stubs['../random'].int = () => 10;
+      stubs['./random'].int = () => 10;
       urs =new UnicodeRangeSet([new UnicodeRange('A', 'I'), new UnicodeRange('K', 'L')]),
       regex = /[K]/,
       char = urs.getRandomCharacter();
