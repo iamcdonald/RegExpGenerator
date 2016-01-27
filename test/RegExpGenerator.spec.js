@@ -1,4 +1,8 @@
-import RegExpGenerator from '../lib/RegExpGenerator';
+import RegExpGenerator, { setDefaultQuantifierMax, setDefaultAvailableRanges } from '../lib/RegExpGenerator';
+import UnicodeRangeSet from '../lib/utils/UnicodeRangeSet';
+import UnicodeRange from '../lib/utils/UnicodeRange';
+import unicodeRanges from '../lib/utils/unicodeRanges';
+import proxyquire from 'proxyquire';
 import tape from 'tape';
 
 const testHandlesRegExp = (t, regexp) => {
@@ -7,6 +11,30 @@ const testHandlesRegExp = (t, regexp) => {
     result = generator.gen();
   t.ok(regex.test(result), `${result} matches ${regex}`);
 }
+
+tape('setDefaultQuantifierMax', t => {
+
+  t.test('sets the default available ranges for generating characters', t => {
+    t.plan(1);
+    setDefaultQuantifierMax(100);
+    let cr = new RegExpGenerator(/a+/);
+    t.deepEqual(cr.quantifierMax, 100);
+  });
+
+});
+
+tape('setDefaultAvailableRanges', t => {
+
+  t.test('sets the default available ranges for generating characters', t => {
+    t.plan(1);
+    setDefaultAvailableRanges('[\\u0000-\\u0100]');
+    let cr = new RegExpGenerator();
+    t.deepEqual(cr.availableRanges, new UnicodeRangeSet([
+      new UnicodeRange(0x0000, 0x0100),
+    ]));
+  });
+
+});
 
 tape('RegExpGenerator', t => {
 

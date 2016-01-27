@@ -1,6 +1,7 @@
 import unicodeRanges from '../../lib/utils/unicodeRanges';
 import UnicodeRange from '../../lib/utils/UnicodeRange';
 import UnicodeRangeSet from '../../lib/utils/UnicodeRangeSet';
+import proxyquire from 'proxyquire';
 import RandomCharacterGenerator, { setDefaultAvailableRanges } from '../../lib/utils/RandomCharacterGenerator';
 import tape from 'tape';
 
@@ -8,7 +9,8 @@ tape('setDefaultAvailableRanges', t => {
 
   t.test('includes all ranges by default', t => {
     t.plan(1);
-    let cr = new RandomCharacterGenerator();
+    let RCG = proxyquire('../../lib/utils/RandomCharacterGenerator', {}).default;
+    let cr = new RCG();
     t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
       new UnicodeRange(0, 2143),
       new UnicodeRange(2208, 7295),
@@ -43,6 +45,24 @@ tape('setDefaultAvailableRanges', t => {
     t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
       new UnicodeRange(0, 112),
       new UnicodeRange(256, 591)
+    ]));
+  });
+
+  t.test('accepts regex for defining range', t => {
+    t.plan(1);
+    setDefaultAvailableRanges(/[\u0000-\u0100]/);
+    let cr = new RandomCharacterGenerator();
+    t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
+      new UnicodeRange(0x0000, 0x0100),
+    ]));
+  });
+
+  t.test('accepts regex string for defining range', t => {
+    t.plan(1);
+    setDefaultAvailableRanges('[\\u0000-\\u0100]');
+    let cr = new RandomCharacterGenerator();
+    t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
+      new UnicodeRange(0x0000, 0x0100),
     ]));
   });
 
@@ -88,6 +108,56 @@ tape('RandomCharacterGenerator', t => {
       ]));
     });
 
+  });
+
+  t.test('setAvailableRanges', t => {
+
+    t.test('updates instance when called', t => {
+      t.plan(1);
+      let cr = new RandomCharacterGenerator();
+      cr.setAvailableRanges([
+        unicodeRanges.LATIN_EXTENDED_A,
+        unicodeRanges.LATIN_EXTENDED_B,
+        new UnicodeRange(0x0000, 0x0010)
+      ]);
+      t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
+        new UnicodeRange(0, 16),
+        new UnicodeRange(256, 591)
+      ]));
+    });
+
+    t.test('handles merging offsets', t => {
+      t.plan(1);
+      let cr = new RandomCharacterGenerator();
+      cr.setAvailableRanges([
+        unicodeRanges.LATIN_EXTENDED_A,
+        new UnicodeRange('@', 'p'),
+        unicodeRanges.LATIN_EXTENDED_B,
+        new UnicodeRange(0x0000, 0x0040)
+      ]);
+      t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
+        new UnicodeRange(0, 112),
+        new UnicodeRange(256, 591)
+      ]));
+    });
+
+    t.test('accepts regex for defining range', t => {
+      t.plan(1);
+      let cr = new RandomCharacterGenerator();
+      cr.setAvailableRanges(/[\u0000-\u0100]/);
+      t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
+        new UnicodeRange(0x0000, 0x0100),
+      ]));
+    });
+
+    t.test('accepts regex string for defining range', t => {
+      t.plan(1);
+      let cr = new RandomCharacterGenerator();
+      cr.setAvailableRanges('[\\u0000-\\u0100]');
+      t.deepEquals(cr.availableRanges, new UnicodeRangeSet([
+        new UnicodeRange(0x0000, 0x0100),
+      ]));
+    });
   });
 
   t.test('getCharacter', t => {

@@ -3,12 +3,12 @@ import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 
 const stubs = {
-  random_incl: sinon.stub(),
-  init_seed: sinon.stub(),
-  'mersenne-twister': class MTStub {
-      random_incl = stubs.random_incl;
-      init_seed = stubs.init_seed;
-    }
+    random_incl: sinon.stub(),
+    init_seed: sinon.stub(),
+    'mersenne-twister': class MTStub {
+        random_incl = stubs.random_incl;
+        init_seed = stubs.init_seed;
+      }
   },
   random = proxyquire('../../lib/utils/random', stubs);
 
