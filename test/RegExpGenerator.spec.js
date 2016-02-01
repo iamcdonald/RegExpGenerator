@@ -8,7 +8,7 @@ import tape from 'tape';
 const testHandlesRegExp = (t, regexp) => {
   const regex = new RegExp(regexp),
     generator = new RegExpGenerator(regex),
-    result = generator.gen();
+    result = generator.generate();
   t.ok(regex.test(result), `${result} matches ${regex}`);
 }
 
